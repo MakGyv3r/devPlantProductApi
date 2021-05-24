@@ -1,0 +1,40 @@
+{
+  "name": "devplantproductapi",
+  "version": "1.0.0",
+  "description": "backend API",
+  "main": "server.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node server",
+    "dev": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MakGyv3r/devPlantProductApi.git"
+  },
+  "author": "yaron",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0",
+    "helmet": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.10",
+    "mongoose-timestamp": "^0.6.0",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.1.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "nodemon": "^2.0.3"
+  },
+  "bugs": {
+    "url": "https://github.com/MakGyv3r/devPlantProductApi/issues"
+  },
+  "homepage": "https://github.com/MakGyv3r/devPlantProductApi#readme"
+}
