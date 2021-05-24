@@ -11,6 +11,10 @@
     "type": "git",
     "url": "git+https://github.com/MakGyv3r/devPlantProductApi.git"
   },
+  "engines": {
+    "npm": "x",
+    "node": "y"
+},
   "author": "yaron",
   "license": "ISC",
   "dependencies": {
