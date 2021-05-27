@@ -72,6 +72,21 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    get user PlantProducts
+// @route   Get /api/v1/PlantProduct
+// @access  privete/protected
+exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const plantProducts = await PlantProduct.find({hubId: user.hubId});
+  const { _id } = req.body;
+  const plantProduct=await plantProducts.findById( _id);
+  console.log(user.hubId);
+  console.log(plantProduct);
+  res.status(200).json({
+    success: true,
+    data: plantProduct,
+  });
+});
 
 // @desc    add a plantProduct to a hub
 // @route   put /api/v1/PlantProduct/plantInitialization
