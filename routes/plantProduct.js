@@ -19,7 +19,7 @@ router.post('/creatplantProduct',creatplantProduct);
 router.post('/updateOnePlantProduct',updateOnePlantProduct);
 router.put('/addPlantProductToHub',protect,addPlantProductToHub);
 router.get('/getUserPlantProducts', protect,advancedResults(PlantProduct), getUserPlantProducts);
-router.get('/getUserPlantProducts', protect,getOnePlantProduct);
+router.put('/getOnePlantProduct', protect,getOnePlantProduct);
 router.put('/plantInitialization', protect, plantInitialization);
 router.put('/removePlantProduct',protect,removePlantProduct);
 

@@ -34,7 +34,7 @@ exports.addPlantProductToHub= asyncHandler(async (req, res, next) => {
         .status(402)
         .send({ error: "Must provide valid Planti's catloge number " });
     }
-  //plantInitialization
+      //plantInitialization
   const io = req.app.get('socketio');
   let obj = clients.find(
     ({ customId }) => customId === hub.hubCatNumber
@@ -46,13 +46,19 @@ exports.addPlantProductToHub= asyncHandler(async (req, res, next) => {
     hub.onlineConnected = false;
   }
 
-//   // await sleep(2000).then(() => {
-//   //   console.log('1');
-//   //   res.status(200).json({
-//   //     success: true,
-//   //     data: plantiplant,
-//   //   });
-//   // });
+    await hub.plantProductId.push(plantProduct._id);
+    await hub.save();
+    // saving the  user and hub in plantiplant
+    plantProduct.hubId = hub._id;
+    await plantProduct.save();
+
+  // await sleep(2000).then(() => {
+  //   console.log('1');
+  //   res.status(200).json({
+  //     success: true,
+  //     data: plantiplant,
+  //   });
+  // });
   res.status(200).json({
     success: true,
   });
@@ -64,8 +70,8 @@ exports.addPlantProductToHub= asyncHandler(async (req, res, next) => {
 exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({hubId: user.hubId});
-  console.log(user.hubId);
-  console.log(plantProducts);
+ // console.log(user.hubId);
+ // console.log(plantProducts);
   res.status(200).json({
     success: true,
     data: plantProducts,
@@ -73,14 +79,17 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    get user PlantProducts
-// @route   Get /api/v1/PlantProduct
+// @route   Put /api/v1/getOnePlantProduct
 // @access  privete/protected
 exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({hubId: user.hubId});
-  const { _id } = req.body;
-  const plantProduct=await plantProducts.findById( _id);
-  console.log(user.hubId);
+  const ID = req.body.id;
+  console.log(ID)
+  
+ const plantProduct=await plantProducts.find(item => String(item ._id)=== ID);
+ // console.log(user.hubId);
   console.log(plantProduct);
   res.status(200).json({
     success: true,
