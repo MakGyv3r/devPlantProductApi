@@ -13,13 +13,22 @@ module.exports = (app,io) =>  {
 //app.set('socketio', io);
 
 io.sockets.on('connection', function (socket) {
-//   console.log('try to connect');
-//   console.log('made socket connection', socket.id);
+   console.log('try to connect');
+   console.log('made socket connection', socket.id);
   
   
-//   socket.on('disconnect', reason => {
-//     console.log('user disconnected');
-//   });
+  socket.on('disconnect', reason => {
+    console.log('user disconnected', socket.id);
+  });
+
+  setInterval(() => {
+    const temp = Math.floor(Math.random()* 100);
+    const topic = 'temperature';
+    console.info(`TEMP : ${temp}`);
+    io.emit(topic,temp);
+}, 3000);
+
+  /*
   socket.on(
     'storeClientInfo',
     asyncHandler(async (data) => {
@@ -204,6 +213,6 @@ socket.on(
         }
       }
     })
-  );
+  );*/
 });
  };
