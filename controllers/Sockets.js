@@ -21,12 +21,18 @@ io.sockets.on('connection', function (socket) {
     console.log('user disconnected', socket.id);
   });
 
-  setInterval(() => {
+  socket.on('AddProductScreen', asyncHandler(async (data) => {
+    console.log('user disconnected', socket.id);
+   // console.log('show data:',data);
+    
+  }));
+
+/*  setInterval(() => {
     const temp = Math.floor(Math.random()* 100);
     const topic = 'temperature';
     console.info(`TEMP : ${temp}`);
     io.emit(topic,temp);
-}, 3000);
+}, 3000);*/
 
   /*
   socket.on(

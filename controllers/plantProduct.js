@@ -21,6 +21,7 @@ exports.addPlantProductToHub= asyncHandler(async (req, res, next) => {
   console.log("i am here");
   const user = await User.findById(req.user.id);
   const { productCatNumber } = req.body;
+  console.log(req.body)
   const hub = await Hub.findById(user.hubId);
   const plantProduct = await PlantProduct.findOne({
     productCatNumber: productCatNumber,
@@ -35,22 +36,22 @@ exports.addPlantProductToHub= asyncHandler(async (req, res, next) => {
         .send({ error: "Must provide valid Planti's catloge number " });
     }
       //plantInitialization
-  const io = req.app.get('socketio');
-  let obj = clients.find(
-    ({ customId }) => customId === hub.hubCatNumber
-  );
-  if (obj != undefined) {
-    hub.onlineConnected = true;
-    io.sockets.connected[obj.clientId].emit( 'task',{ task: "1",macAddress: plantProduct.macAddress,motorCurrentSub:plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber} );
-  } else {
-    hub.onlineConnected = false;
-  }
+  // const io = req.app.get('socketio');
+  // let obj = clients.find(
+  //   ({ customId }) => customId === hub.hubCatNumber
+  // );
+  // if (obj != undefined) {
+  //   hub.onlineConnected = true;
+  //   io.sockets.connected[obj.clientId].emit( 'task',{ task: "1",macAddress: plantProduct.macAddress,motorCurrentSub:plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber} );
+  // } else {
+  //   hub.onlineConnected = false;
+  // }
 
-    await hub.plantProductId.push(plantProduct._id);
-    await hub.save();
+    // await hub.plantProductId.push(plantProduct._id);
+    // await hub.save();
     // saving the  user and hub in plantiplant
-    plantProduct.hubId = hub._id;
-    await plantProduct.save();
+    // plantProduct.hubId = hub._id;
+    // await plantProduct.save();
 
   // await sleep(2000).then(() => {
   //   console.log('1');
@@ -86,11 +87,11 @@ exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({hubId: user.hubId});
   const ID = req.body.id;
-  console.log(ID)
+ // console.log(ID)
   
  const plantProduct=await plantProducts.find(item => String(item ._id)=== ID);
  // console.log(user.hubId);
-  console.log(plantProduct);
+  //console.log(plantProduct);
   res.status(200).json({
     success: true,
     data: plantProduct,
