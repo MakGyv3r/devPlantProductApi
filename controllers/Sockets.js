@@ -22,7 +22,7 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('AddProductScreen', asyncHandler(async (data) => {
-    console.log('user disconnected', socket.id);
+    console.log('AddProductScreen', socket.id);
    // console.log('show data:',data);
     
   }));
