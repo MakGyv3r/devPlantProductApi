@@ -60,7 +60,8 @@ app.get("/", (req, res) => {
   res.status(200).send("WHATABYTE: Food For Devs");
 });
 
-let io = socket(server);
+
+let io = socket(server,{allowEIO3: true});
 app.set('socketio', io);
 require("./controllers/Sockets")(app, io);
 

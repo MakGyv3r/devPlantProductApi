@@ -2,6 +2,8 @@
 const PlantProduct = require('../models/PlantProduct');
 const Hub = require('../models/Hub');
 let clients = require('../models/clients');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 const asyncHandler = require('../middleware/async');
 
 function sleep(ms) {
@@ -11,44 +13,77 @@ function sleep(ms) {
 module.exports = (app,io) =>  {
 // socket connecting to ESP32 and adding it to the clients
 //app.set('socketio', io);
-
+/*
 io.sockets.on('connection', function (socket) {
    console.log('try to connect');
-   console.log('made socket connection', socket.id);
+   //console.log(socket);
+
+  //  let token;
+  //  if(socket.handshake.headers.cookie){
+  //   token=socket.handshake.headers.cookie.replace("token=", "");}
+
+  // console.log('made socket connection',token);
+  //  socket.on('storeClientInfo',  asyncHandler(async (data) => {
+  //   const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  //   console.log(decoded);
+  // }));
   
-  
-  socket.on('disconnect', reason => {
-    console.log('user disconnected', socket.id);
-  });
+  // socket.on('disconnect', reason => {
+  //   console.log('user disconnected', socket.id);
+  // });
 
   socket.on('AddProductScreen', asyncHandler(async (data) => {
     console.log('AddProductScreen', socket.id);
-   // console.log('show data:',data);
-    
-  }));
+    const ID=socket.id;
+    console.log(data)
+    if(data.productCatNumber==='000000001')
+   await sleep(5000).then(() => {
+    io.emit('AddProductScreen','product Number is currect');
+    console.log('send massage')
+  })
+  else 
+  await sleep(5000).then(() => {
+    io.emit('AddProductScreen','initialization has failed please try again or check product Number');
+    console.log('send massage')
+  })
+})
+  )
 
-/*  setInterval(() => {
-    const temp = Math.floor(Math.random()* 100);
-    const topic = 'temperature';
-    console.info(`TEMP : ${temp}`);
-    io.emit(topic,temp);
-}, 3000);*/
 
-  /*
+    console.log('made socket connection', socket.id);
+    socket.on('storeClientInfo', (data) => {
+      let obj = clients.find(({ customId }) => customId === data);
+      if (!obj) {
+        console.log('1');
+        var clientInfo = new Object();
+        clientInfo.customId = data;
+        clientInfo.clientId = socket.id;
+        clients.push(clientInfo);
+        console.log('connected custom id:', clients);
+      } else {
+        console.log('2');
+        let index = clients.indexOf(obj);
+        clients[index].clientId = socket.id;
+        console.log('connected custom id:', clients);
+      }
+    });
+
+
   socket.on(
     'storeClientInfo',
     asyncHandler(async (data) => {
       // looking for Router with the catNumber id that the product has
-      let hub = await Hub.findOne({
-        hubCatNumber: data,
-      });
-
+      console.log(data)
+      // let hub = await Hub.findOne({
+      //   hubCatNumber: data,
+      // });
+      
       // looking for User with the Number id in the data base
         // let User = await User.findOne({
         //   _id: data,
      // });
       //check if client don't have a socket 
-      if(hub){
+       // if(hub){
       // looking if client has a socket allready if yes add it to obj
         let obj = clients.find(({ customId }) => customId === data);
         if (!obj) {
@@ -58,7 +93,7 @@ io.sockets.on('connection', function (socket) {
           clientInfo.clientId = socket.id;
           clients.push(clientInfo);
           hub.onlineConnected = true;
-          await hub.save();
+        //  await hub.save();
           console.log('connected custom id:', clients);
         } 
         //need to chacek if the product exsists 
@@ -72,10 +107,15 @@ io.sockets.on('connection', function (socket) {
         await sleep(10).then(() => {
           console.log(hub.onlineConnected);
         });
-      };
+    //  }
+      // else if (token){
+        
+
+      // }
 
     })
   );
+
 
 
 socket.on(
@@ -105,7 +145,7 @@ socket.on(
    console.log(hub);
   })
 );
-
+  /*
 // socket entering date from ESP32
   socket.on(
     'resultsdata',
@@ -126,7 +166,7 @@ socket.on(
       console.log('success');
     })
   );
-
+/*
   // socket entering water status from ESP32
   socket.on(
     'irrigatedata',
@@ -200,6 +240,7 @@ socket.on(
         console.log('updatingSuccessed');
       })
     );  
+    
 
   // socket disconnecting from ESP32
   socket.on(
@@ -209,16 +250,92 @@ socket.on(
       for (var i = 0, len = clients.length; i < len; ++i) {
         var c = clients[i];
         if (c.clientId == socket.id) {
-          let hub = await PlantProduct.findOne({
-            hubCatNumber: c.customId,
-          });
-          hub.onlineConnected = false;
-          await hub.save();
+          // let hub = await PlantProduct.findOne({
+          //   hubCatNumber: c.customId,
+          // });
+          // hub.onlineConnected = false;
+          // await hub.save();
           clients.splice(i, 1);
           break;
         }
       }
     })
-  );*/
+  );
+
+    // socket disconnecting from ESP32
+    socket.on('disconnect', function (data) {
+      console.log('Client disconnected');
+      for (var i = 0, len = clients.length; i < len; ++i) {
+        var c = clients[i];
+        if (c.clientId == socket.id) {
+          clients.splice(i, 1);
+          break;
+        }
+      }
+    });
+
+
+    });
+*/
+io.sockets.on('connection', function (socket) {
+  //console.log('made socket connection', socket.id);
+  console.log(socket)
+  socket.on('storeClientInfo', (data) => {
+    console.log(data)
+    let obj = clients.find(({ customId }) => customId === data);
+    if (!obj) {
+      console.log('1');
+      var clientInfo = new Object();
+      clientInfo.customId = data;
+      clientInfo.clientId = socket.id;
+      clients.push(clientInfo);
+      console.log('connected custom id:', clients);
+    } else {
+      console.log('2');
+      let index = clients.indexOf(obj);
+      clients[index].clientId = socket.id;
+      console.log('connected custom id:', clients);
+    }
+  });
+  console.log(0);
+
+  // socket entering date from ESP32
+  socket.on(
+    'resultsdata',
+    asyncHandler(async (data) => {
+      console.log(data);
+      var myJSON = JSON.stringify(eval('(' + data + ')'));
+      var idResultsObj = JSON.parse(myJSON);
+      let plantiplant = await PlantiPlant.findOne({
+        productCatNumber: idResultsObj.productId,
+      });
+      console.log(myJSON);
+      plantiplant.muisterSensor.tests.push({
+        status: idResultsObj.moistureSensor,
+      });
+      plantiplant.lightSensor.tests.push({ status: idResultsObj.lightSensor });
+
+      plantiplant.waterSensor.tests.push({
+        status: idResultsObj.waterSensor,
+      });
+      await plantiplant.save();
+      console.log('success');
+    })
+  );
+
+  // socket disconnecting from ESP32
+  socket.on('disconnect', function (data) {
+    console.log('Client disconnected');
+    for (var i = 0, len = clients.length; i < len; ++i) {
+      var c = clients[i];
+      if (c.clientId == socket.id) {
+        clients.splice(i, 1);
+        break;
+      }
+    }
+  });
 });
+
  };
+
+ 
