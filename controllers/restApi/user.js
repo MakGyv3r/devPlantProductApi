@@ -1,7 +1,7 @@
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
-const User = require('../models/User');
-const PlantProduct = require('../models/PlantProduct');
+const ErrorResponse = require('../../utils/errorResponse');
+const asyncHandler = require('../../middleware/async');
+const User = require('../../models/User');
+const PlantProduct = require('../../models/PlantProduct');
 
 
 // @desc    get all users

@@ -1,15 +1,15 @@
 const crypto = require('crypto');
-const ErrorResponse = require('../utils/errorResponse');
-const asyncHandler = require('../middleware/async');
+const ErrorResponse = require('../../utils/errorResponse');
+const asyncHandler = require('../../middleware/async');
 // const sendEmail = require('../utils/sendEmail');
-const User = require('../models/User');
-const Hub = require('../models/Hub');
+const User = require('../../models/User');
+const Hub = require('../../models/Hub');
 
 // @desc    Register user
 // @route   post /api/v1/auth/register
 // @access  public
 exports.register = asyncHandler(async (req, res, next) => {
-  const { name, email, password,hubCatNumber } = req.body;
+  const { name, email, password, hubCatNumber } = req.body;
   console.log(hubCatNumber);
   const hub = await Hub.findOne({
     hubCatNumber: hubCatNumber,

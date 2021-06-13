@@ -1,24 +1,24 @@
 
-const asyncHandler = require('../middleware/async');
+const asyncHandler = require('../../middleware/async');
 
-exports.plantproductTxt= asyncHandler(async (req, res, next) => {
+exports.plantproductTxt = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/plantproduct.txt');
 });
-exports.plantproductBin= asyncHandler(async (req, res, next) => {
+exports.plantproductBin = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/ardorinoUpdate/plantproduct.bin');
 });
 
-exports.hubslaveTxt= asyncHandler(async (req, res, next) => {
+exports.hubslaveTxt = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/hubslave.txt');
 });
-exports.hubslaveBin= asyncHandler(async (req, res, next) => {
+exports.hubslaveBin = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/ardorinoUpdate/hubslave.bin');
 });
 
-exports.hubmasterTxt= asyncHandler(async (req, res, next) => {
+exports.hubmasterTxt = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/hubmaster.txt');
 });
-exports.hubmasterBin= asyncHandler(async (req, res, next) => {
+exports.hubmasterBin = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/ardorinoUpdate/hubmaster.bin');
 });
 
