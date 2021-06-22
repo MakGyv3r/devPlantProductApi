@@ -9,15 +9,15 @@ const PlantProductSchema = new mongoose.Schema({
     trim: true,
     length: [9, 'Product catalog number should be 9 numbers'],
   },
- 
-  macAddress:{
+
+  macAddress: {
     type: String,
     length: 12,
-    require:  [true, 'Please add Product Mac Address number'],
+    require: [true, 'Please add Product Mac Address number'],
     unique: true,
     trim: true,
   },
- 
+
   name: {
     type: String,
     maxlength: [50, 'Name can not be more than 50 characters'],
@@ -51,10 +51,10 @@ const PlantProductSchema = new mongoose.Schema({
     default: false,
   },
 
-  irrigatePlantOption:{
-   type: String,
-  enum: ['0','1', '2', '3'],
-  default: '0',
+  irrigatePlantOption: {
+    type: String,
+    enum: ['0', '1', '2', '3'],
+    default: '0',
   },
 
   waterSensor: {
@@ -62,7 +62,7 @@ const PlantProductSchema = new mongoose.Schema({
       type: Boolean,
       default: true,
     },
-    motorCurrentSub:{
+    motorCurrentSub: {
       type: String,
       default: "300",
     },
@@ -72,8 +72,9 @@ const PlantProductSchema = new mongoose.Schema({
     state: {
       type: Boolean,
       default: false,
-      time: { type: Date, default: Date.now },
-    }
+    },
+    timeOn: { type: Date, default: Date.now },
+    timeOff: { type: Date, default: Date.now }
   },
 
   lightSensor: {
@@ -97,26 +98,25 @@ const PlantProductSchema = new mongoose.Schema({
   },
 
   progremVersion: {
-    versionNumber:{
+    versionNumber: {
       type: Number,
       default: 1,
     },
-    versionString:{
+    versionString: {
       type: String,
       default: '0.1',
     },
-    updateUrl:{
+    updateUrl: {
       type: String,
       default: 'http://morning-falls-78321.herokuapp.com/plantproduct.txt',
     },
-    updateDone:{
+    updateDone: {
       type: Boolean,
       default: true,
     },
   },
-  
+
 });
 
-// Cascade delete 'WetnessSensor' when a bootcamp is deleted
 
 module.exports = mongoose.model('PlantProduct', PlantProductSchema);

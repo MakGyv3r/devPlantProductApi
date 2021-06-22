@@ -73,7 +73,6 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
   // console.log(user.hubId);
   // console.log(plantProducts);
-  console.log('2');
   res.status(200).json({
     success: true,
     data: plantProducts,
@@ -91,8 +90,6 @@ exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
   //console.log(ID)
   const plantProduct = await plantProducts.find(item => String(item._id) === ID);
   // console.log(user.hubId);
-  console.log('1');
-  console.log(plantProduct)
   res.status(200).json({
     success: true,
     data: plantProduct,

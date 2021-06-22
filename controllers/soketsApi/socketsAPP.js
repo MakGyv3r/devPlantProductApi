@@ -1,5 +1,6 @@
 const PlantProduct = require('../../models/PlantProduct');
 const Hub = require('../../models/Hub');
+const mongoose = require('mongoose');
 let clients = require('../../models/clients');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../../middleware/async');
@@ -79,18 +80,25 @@ module.exports = (app, io) => {
       });
       let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
       const plantProduct = await PlantProduct.findById(id.toString());
-      // //check if product existes
-      // if ((plantProduct) && (!plantProduct.hubId)) {
-      //   console.log(objHub);
-      //   io.to(objHub.clientId).emit('task', { task: "1", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber });
-      // }
-      // else io.to(socket.id).emit('AddProductScreen', 'product Number is not currect');
-      await sleep(5000).then(() => {
-        io.to(socket.id).emit('changeMotorState', !stateMotor);
-        console.log('socket is sent')
-      })
+      console.log(objHub)
+      io.to(objHub.clientId).emit('task', { task: "6", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, motorState: stateMotor });
     })
     )
+
+    socket.on('GetData', asyncHandler(async (id) => {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      let hub = await Hub.findOne({
+        userId: decoded.id
+      });
+      let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
+      const plantProduct = await PlantProduct.findById(id.toString());
+      console.log(objHub)
+      io.to(objHub.clientId).emit('task', { task: "3", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, });
+      console.log('socket is sent')
+    })
+    )
+
+
 
   });
 

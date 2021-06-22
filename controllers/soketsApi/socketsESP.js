@@ -1,9 +1,11 @@
 
 const PlantProduct = require('../../models/PlantProduct');
+const ErrorResponse = require('../../utils/errorResponse');
 const Hub = require('../../models/Hub');
 let clients = require('../../models/clients');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../../middleware/async');
+
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -77,38 +79,55 @@ module.exports = (app, io) => {
     })
     )
 
-    // socket entering date from ESP32
+    // socket motor cange date in caloud 
     socket.on('resultsdata', asyncHandler(async (data) => {
-      console.log(data);
       var myJSON = JSON.stringify(eval('(' + data + ')'));
       var idResultsObj = JSON.parse(myJSON);
       let plantProduct = await PlantProduct.findOne({
         productCatNumber: idResultsObj.productCatNumber,
       });
-      console.log(myJSON);
-      plantProduct.muisterSensor.tests.push({
-        status: idResultsObj.moistureStatus,
-      });
-      plantProduct.lightSensor.tests.push({ status: idResultsObj.lightStatus });
+      let objhub = clients.find(({ clientId }) => clientId === socket.id);
+      let hub = await Hub.findOne({ hubCatNumber: objhub.customId });
+
+      //console.log(myJSON);
+      console.log(idResultsObj.moistureStatus.toString());
+
+      // plantProduct.muisterSensor.tests.push(
+      //   { status: idResultsObj.moistureStatus.toString() }
+      // );
+
+      await plantProduct.lightSensor.tests.push({ status: idResultsObj.lightStatus });
+
       await plantProduct.save();
+      // io.to(objUser.clientId).emit('showData', { 'lightSensor': plantProduct.lightSensor, 'muisterSensor': plantProduct.muisterSensor });
+
+
       //**need to add- send the user the date get from the router if user online
       console.log('success');
     })
     );
 
+
     // socket entering water status from ESP32
     socket.on('irrigatedata', asyncHandler(async (data) => {
-      console.log(data);
       var myJSON = JSON.stringify(eval('(' + data + ')'));
       var idResultsObj = JSON.parse(myJSON);
       let plantProduct = await PlantProduct.findOne({
         productCatNumber: idResultsObj.productCatNumber,
       });
-      plantProduct.waterSensor.isThereWater = idResultsObj.waterState;
+      let objhub = clients.find(({ clientId }) => clientId === socket.id);
+      let hub = await Hub.findOne({
+        hubCatNumber: objhub.customId,
+      });
+      let objUser = clients.find(({ customId }) => customId === hub.userId.toString());
       plantProduct.waterMotor.state = idResultsObj.motorState;
-      plantProduct.autoIrrigateState.state = idResultsObj.autoIrrigateState;
+      if (idResultsObj.motorState === true)
+        plantProduct.waterMotor.timeOn = Date.now();
+      else plantProduct.waterMotor.timeOff = Date.now();
+      //await PlantProduct.findByIdAndUpdate({ _id: plantProduct._id }, { $set: { waterMotor: idResultsObj.motorState } })
       await plantProduct.save();
-      console.log('success');
+      io.to(objUser.clientId).emit('changeMotorState', idResultsObj.motorState);
+      console.log('motor succes changed');
     })
     );
 

@@ -38,21 +38,21 @@ const HubSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  
+
   progremVersionHubMaster: {
     updateProgrem: {
       type: Boolean,
       default: false,
     },
-    versionNumber:{
+    versionNumber: {
       type: Number,
       default: 1,
     },
-    versionString:{
+    versionString: {
       type: String,
       default: '0.1',
     },
-    updateUrl:{
+    updateUrl: {
       type: String,
       default: 'http://morning-falls-78321.herokuapp.com/hubmaster.txt',
     },
@@ -63,21 +63,20 @@ const HubSchema = new mongoose.Schema({
       type: Boolean,
       default: false,
     },
-    versionNumber:{
+    versionNumber: {
       type: Number,
       default: 1,
     },
-    versionString:{
+    versionString: {
       type: String,
       default: '0.1',
     },
-    updateUrl:{
+    updateUrl: {
       type: String,
       default: 'http://morning-falls-78321.herokuapp.com/hubslave.txt',
     },
   },
 });
 
-// Cascade delete 'WetnessSensor' when a bootcamp is deleted
 
 module.exports = mongoose.model('Hub', HubSchema);
