@@ -83,27 +83,19 @@ module.exports = (app, io) => {
     socket.on('resultsdata', asyncHandler(async (data) => {
       var myJSON = JSON.stringify(eval('(' + data + ')'));
       var idResultsObj = JSON.parse(myJSON);
-      let plantProduct = await PlantProduct.findOne({
-        productCatNumber: idResultsObj.productCatNumber,
-      });
+      let plantProduct = await PlantProduct.findOne({ productCatNumber: idResultsObj.productCatNumber, });
       let objhub = clients.find(({ clientId }) => clientId === socket.id);
       let hub = await Hub.findOne({ hubCatNumber: objhub.customId });
+      let objUser = clients.find(({ customId }) => customId === hub.userId.toString());
 
-      //console.log(myJSON);
-      console.log(idResultsObj.moistureStatus.toString());
-
-      // plantProduct.muisterSensor.tests.push(
-      //   { status: idResultsObj.moistureStatus.toString() }
-      // );
-
+      await plantProduct.moistureSensor.tests.push({ status: idResultsObj.moistureStatus });
       await plantProduct.lightSensor.tests.push({ status: idResultsObj.lightStatus });
-
       await plantProduct.save();
-      // io.to(objUser.clientId).emit('showData', { 'lightSensor': plantProduct.lightSensor, 'muisterSensor': plantProduct.muisterSensor });
 
+      console.log(idResultsObj.moistureStatus, idResultsObj.lightStatus);
+      io.to(objUser.clientId).emit('showData', { 'lightSensor': idResultsObj.lightStatus, 'muisterSensor': idResultsObj.moistureStatus });
 
       //**need to add- send the user the date get from the router if user online
-      console.log('success');
     })
     );
 
@@ -116,17 +108,19 @@ module.exports = (app, io) => {
         productCatNumber: idResultsObj.productCatNumber,
       });
       let objhub = clients.find(({ clientId }) => clientId === socket.id);
-      let hub = await Hub.findOne({
-        hubCatNumber: objhub.customId,
-      });
+      let hub = await Hub.findOne({ hubCatNumber: objhub.customId, });
       let objUser = clients.find(({ customId }) => customId === hub.userId.toString());
       plantProduct.waterMotor.state = idResultsObj.motorState;
+      plantProduct.waterSensor.waterState.state = idResultsObj.waterState;
+      plantProduct.autoIrrigateState = idResultsObj.autoIrrigateState;
+
+      //console.log(idResultsObj);
       if (idResultsObj.motorState === true)
         plantProduct.waterMotor.timeOn = Date.now();
       else plantProduct.waterMotor.timeOff = Date.now();
       //await PlantProduct.findByIdAndUpdate({ _id: plantProduct._id }, { $set: { waterMotor: idResultsObj.motorState } })
       await plantProduct.save();
-      io.to(objUser.clientId).emit('changeMotorState', idResultsObj.motorState);
+      io.to(objUser.clientId).emit('changeMotorState', { 'motorState': idResultsObj.motorState, 'waterState': idResultsObj.waterState, 'autoIrrigateState': idResultsObj.autoIrrigateState });
       console.log('motor succes changed');
     })
     );
@@ -136,9 +130,7 @@ module.exports = (app, io) => {
       console.log(data);
       let myJSON = JSON.stringify(eval('(' + data + ')'));
       let idResultsObj = JSON.parse(myJSON);
-      let plantProduct = await PlantProduct.findOne({
-        productCatNumber: idResultsObj.productCatNumber
-      });
+      let plantProduct = await PlantProduct.findOne({ productCatNumber: idResultsObj.productCatNumber });
 
       if (idResultsObj.wifiWorked === false) {
         console.log('coudn\'t connect to wifi, no update');
@@ -160,9 +152,7 @@ module.exports = (app, io) => {
       console.log(data);
       let myJSON = JSON.stringify(eval('(' + data + ')'));
       let idResultsObj = JSON.parse(myJSON);
-      let hub = await Hub.findOne({
-        hubCatNumber: idResultsObj.id
-      });
+      let hub = await Hub.findOne({ hubCatNumber: idResultsObj.id });
       if (idResultsObj.type === "hub") {
         if (idResultsObj.versionNumber === hub.progremVersion.versionNumber) {
           console.log(' connect to wifi, no update needed same version');

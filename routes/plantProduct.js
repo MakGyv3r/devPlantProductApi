@@ -6,7 +6,8 @@ const {
   getUserPlantProducts,
   plantInitialization,
   removePlantProduct,
-  getOnePlantProduct
+  getOnePlantProduct,
+  getPlantProductData
 } = require('../controllers/restApi/plantProduct');
 
 const router = express.Router();
@@ -18,6 +19,7 @@ const { protect } = require('../middleware/auth');
 router.post('/creatplantProduct', creatplantProduct);
 router.post('/updateOnePlantProduct', updateOnePlantProduct);
 router.put('/addPlantProductToHub', protect, addPlantProductToHub);
+router.put('/getPlantProductData', protect, getPlantProductData);
 router.get('/getUserPlantProducts', protect/*,advancedResults(PlantProduct)*/, getUserPlantProducts);
 router.put('/getOnePlantProduct', protect, getOnePlantProduct);
 router.put('/plantInitialization', protect, plantInitialization);

@@ -90,11 +90,26 @@ exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
   //console.log(ID)
   const plantProduct = await plantProducts.find(item => String(item._id) === ID);
   // console.log(user.hubId);
+  console.log(plantProduct);
   res.status(200).json({
     success: true,
     data: plantProduct,
   });
+});
 
+// @desc    get user PlantProducts
+// @route   Put /api/v1/getPlantProductData
+// @access  privete/protected
+exports.getPlantProductData = asyncHandler(async (req, res, next) => {
+  //console.log(req.body);
+  const { productCatNumber } = req.body;
+  const plantProduct = await PlantProduct.findById(req.body.id);
+  console.log(plantProduct);
+
+  res.status(200).json({
+    success: true,
+    data: plantProduct,
+  });
 });
 
 // @desc    add a plantProduct to a hub

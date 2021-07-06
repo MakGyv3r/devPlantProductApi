@@ -58,7 +58,7 @@ const PlantProductSchema = new mongoose.Schema({
   },
 
   waterSensor: {
-    isThereWater: {
+    waterState: {
       type: Boolean,
       default: true,
     },
@@ -115,7 +115,6 @@ const PlantProductSchema = new mongoose.Schema({
       default: true,
     },
   },
-
 });
 
 

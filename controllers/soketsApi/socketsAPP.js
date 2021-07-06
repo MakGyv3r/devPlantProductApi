@@ -85,6 +85,18 @@ module.exports = (app, io) => {
     })
     )
 
+    socket.on('AppAutoIrrigate', asyncHandler(async (id, autoIrrigate) => {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      let hub = await Hub.findOne({
+        userId: decoded.id
+      });
+      let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
+      const plantProduct = await PlantProduct.findById(id.toString());
+      console.log(objHub)
+      io.to(objHub.clientId).emit('task', { task: "4", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, autoIrrigateState: autoIrrigate });
+    })
+    )
+
     socket.on('GetData', asyncHandler(async (id) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       let hub = await Hub.findOne({
