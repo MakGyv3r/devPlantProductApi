@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const User = require('../models/User');
+//const PlantProduct = require('../models/PlantProduct');
 
 const PlantProductSchema = new mongoose.Schema({
   // add the user conected to products
@@ -116,6 +118,44 @@ const PlantProductSchema = new mongoose.Schema({
     },
   },
 });
+
+PlantProductSchema.statics.checkAmountOfData = async function (hubId, id) {
+
+  const user = await User.findOne({
+    hubId: hubId,
+  });
+
+  if (user.role === "user") {
+    const obj = await this.model('PlantProduct').findOne({ "_id": id })
+    //console.log(obj.lightSensor.tests.slice(obj.lightSensor.tests.length - 10))
+    if (obj.lightSensor.tests.length > 10)
+      try {
+        let letest10 = obj.lightSensor.tests.slice(obj.lightSensor.tests.length - 10)
+        let updatedData = obj
+        updatedData.lightSensor.tests = [...letest10]
+        await this.model('PlantProduct').findByIdAndUpdate(id, updatedData)
+      } catch (e) {
+        print(e);
+      }
+
+    if (obj.moistureSensor.tests.length > 10)
+      try {
+        let latest10 = obj.moistureSensor.tests.slice(obj.moistureSensor.tests.length - 10)
+        let moistureSensorupdatedData = obj
+        moistureSensorupdatedData.moistureSensor.tests = [...latest10]
+        await this.model('PlantProduct').findByIdAndUpdate(id, moistureSensorupdatedData)
+      } catch (e) {
+        print(e);
+      }
+  }
+}
+
+
+
+PlantProductSchema.post('save', function () {
+  this.constructor.checkAmountOfData(this.hubId, this._id);
+})
+
 
 
 module.exports = mongoose.model('PlantProduct', PlantProductSchema);

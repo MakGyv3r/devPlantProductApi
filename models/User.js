@@ -9,9 +9,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     require: [false, 'Please add a name'],
   },
- /* customId:[
-
-  ],*/
+  /* customId:[
+ 
+   ],*/
 
   hubId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    enum: ['user' , 'admin'],
+    enum: ['user', 'semiPro', 'pro', 'admin'],
     default: 'user',
   },
 
@@ -48,12 +48,12 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
   },
 
- //if product is connected to the server
+  //if product is connected to the server
   onlineConnected: {
     type: Boolean,
     default: false,
   },
-  
+
 });
 
 // Encrypt password using bcrypt

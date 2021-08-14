@@ -16,8 +16,8 @@ module.exports = (app, io) => {
   io.sockets.on('connection', function (socket) {
     let token;
     console.log(socket.id);
-    if (socket.handshake.headers.cookie) {
-      token = socket.handshake.headers.cookie.replace("token=", "");
+    if (socket.handshake.auth.token) {
+      token = socket.handshake.auth.token;
       socket.emit('storeApp');
     }
     // console.log(token);
@@ -53,6 +53,7 @@ module.exports = (app, io) => {
       //check if product existes
       if ((plantProduct) && (!plantProduct.hubId)) {
         console.log(objHub);
+        plantProduct.name = data.Name;
         io.to(objHub.clientId).emit('task', { task: "1", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber });
       }
       else io.to(socket.id).emit('AddProductScreen', 'product Number is not currect');
@@ -109,8 +110,6 @@ module.exports = (app, io) => {
       console.log('socket is sent')
     })
     )
-
-
 
   });
 

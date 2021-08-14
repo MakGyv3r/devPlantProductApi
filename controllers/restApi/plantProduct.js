@@ -79,7 +79,34 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    get user PlantProducts
+// @desc    get user PlantProducts check for updates
+// @route   Get /api/v1/PlantProduct
+// @access  privete/protected
+exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+  const plantProducts = await PlantProduct.find({ hubId: user.hubId });
+  //plantInitialization
+  res.status(200).json({
+    success: true,
+    data: plantProducts,
+  });
+  const io = req.app.get('socketio');
+  let obj = clients.find(
+    ({ customId }) => customId === hub.hubCatNumber
+  );
+  if (obj != undefined) {
+    hub.onlineConnected = true;
+    plantProducts.forEach(async element => {
+      await sleep(40).then(() => {
+        io.sockets.connected[obj.clientId].emit('task', { task: "3", macAddress: element.macAddress, productCatNumber: element.productCatNumber });
+      });
+    });
+  } else {
+    hub.onlineConnected = false;
+  }
+});
+
+// @desc    get one PlantProducts
 // @route   Put /api/v1/getOnePlantProduct
 // @access  privete/protected
 exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
@@ -89,8 +116,8 @@ exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
   const ID = req.body.id;
   //console.log(ID)
   const plantProduct = await plantProducts.find(item => String(item._id) === ID);
-  // console.log(user.hubId);
-  console.log(plantProduct);
+  // console.log(user.hubId);.dirxml()
+  console.group(plantProduct);
   res.status(200).json({
     success: true,
     data: plantProduct,
@@ -104,7 +131,6 @@ exports.getPlantProductData = asyncHandler(async (req, res, next) => {
   //console.log(req.body);
   const { productCatNumber } = req.body;
   const plantProduct = await PlantProduct.findById(req.body.id);
-  console.log(plantProduct);
 
   res.status(200).json({
     success: true,
@@ -133,14 +159,31 @@ exports.plantInitialization = asyncHandler(async (req, res, next) => {
   } else {
     hub.onlineConnected = false;
   }
-
   res.status(200).json({
     success: true,
     data: hub,
   });
 });
 
-
+// @desc    add Data to plantProduct 
+// @route   put /api/v1/PlantProduct/addDataPlantProduct
+// @access  privet/protected
+exports.addDataPlantProduct = asyncHandler(async (req, res, next) => {
+  const { productCatNumber, moistureStatus, lightStatus } = req.body;
+  console.log(productCatNumber);
+  const plantProduct = await PlantProduct.findOne({
+    productCatNumber: productCatNumber,
+  });
+  if (moistureStatus)
+    await plantProduct.moistureSensor.tests.push({ status: moistureStatus });
+  if (lightStatus)
+    await plantProduct.lightSensor.tests.push({ status: lightStatus });
+  await plantProduct.save();
+  res.status(200).json({
+    success: true,
+    data: plantProduct,
+  });
+})
 
 // @desc    delete plantProduct 
 // @route   delete /api/v1/plantProduct/removePlantProduct
