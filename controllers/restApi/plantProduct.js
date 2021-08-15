@@ -196,8 +196,9 @@ exports.removePlantProduct = asyncHandler(async (req, res, next) => {
   const plantProduct = await PlantProduct.findById(plantproductId);
   console.log(plantProduct.hubId);
   plantProduct.hubId = undefined;
+  await plantProduct.remove();
   await hub.save();
-  await plantProduct.save();
+
   res.status(200).json({
     success: true,
     data: {},
