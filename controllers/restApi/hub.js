@@ -53,7 +53,7 @@ exports.updateOnehub = asyncHandler(async (req, res, next) => {
   let obj = clients.find(
     ({ customId }) => customId === hub.hubCatNumber
   );
-  console.log(obj)
+  //  console.log(obj)
   if (obj) {
     hub.onlineConnected = true;
     io.to(obj.clientId).emit('Update_Progrem_hub', { task: "11", hubhubCatNumber: hubCatNumber, ssid: "", pass: "", VERSION_NUMBER: versionNumber, UPDATE_URL: UpdateUrl, type: type });
