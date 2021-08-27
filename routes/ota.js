@@ -11,12 +11,12 @@ const {
 const router = express.Router();
 
 
-router.post('/plantproduct.txt', plantproductTxt);
+router.get('/plantproduct.txt', plantproductTxt);
 router.get('/plantproduct.bin', plantproductBin);
-router.post('/hubslave.txt', hubslaveTxt);
-router.post('/hubslave.bin', hubslaveBin);
+router.get('/hubslave.txt', hubslaveTxt);
+router.get('/hubslave.bin', hubslaveBin);
 router.get('/hubmaster.txt', hubmasterTxt);
-router.post('/hubmaster.bin', hubmasterBin);
+router.get('/hubmaster.bin', hubmasterBin);
 
 
 module.exports = router;

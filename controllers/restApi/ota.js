@@ -11,6 +11,7 @@ exports.plantproductBin = asyncHandler(async (req, res, next) => {
 exports.hubslaveTxt = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/hubslave.txt');
 });
+
 exports.hubslaveBin = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/ardorinoUpdate/hubslave.bin');
 });
@@ -18,6 +19,7 @@ exports.hubslaveBin = asyncHandler(async (req, res, next) => {
 exports.hubmasterTxt = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/hubmaster.txt');
 });
+
 exports.hubmasterBin = asyncHandler(async (req, res, next) => {
   res.sendFile(__dirname + '/public/ardorinoUpdate/hubmaster.bin');
 });

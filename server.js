@@ -56,6 +56,7 @@ const server = app.listen(
     `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
 );
+
 app.get("/", (req, res) => {
   res.status(200).send("WHATABYTE: Food For Devs");
 });
