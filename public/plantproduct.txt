@@ -1,2 +1,2 @@
-http://morning-falls-78321.herokuapp.com/plantproduct.bin
+http://aqueous-river-62632.herokuapp.com/plantproduct.bin
 1

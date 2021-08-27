@@ -13,7 +13,7 @@ function sleep(ms) {
 
 module.exports = (app, io) => {
   // socket connecting to ESP32 and adding it to the clients
-  //app.set('socketio', io);
+  app.set('socketio', io);
 
   io.sockets.on('connection', function (socket) {
 
@@ -186,6 +186,11 @@ module.exports = (app, io) => {
 
           if (hub) {
             hub.onlineConnected = false;
+            let objUser = clients.find(({ customId }) => customId === hub.userId.toString());
+            if (objUser) {
+              console.log('socket has sent')
+              io.to(objUser.clientId).emit('hubConnected', { 'hubStatus': hub.onlineConnected });
+            }
             await hub.save();
           }
           clients.splice(i, 1);

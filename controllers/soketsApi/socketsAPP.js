@@ -51,12 +51,17 @@ module.exports = (app, io) => {
         productCatNumber: data.productCatNumber,
       });
       //check if product existes
-      if ((plantProduct) && (!plantProduct.hubId)) {
-        console.log(objHub);
-        plantProduct.name = data.Name;
-        io.to(objHub.clientId).emit('task', { task: "1", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber });
+      if (objHub) {
+        if ((plantProduct) && (!plantProduct.hubId)) {
+          console.log(objHub);
+          plantProduct.name = data.Name;
+          io.to(objHub.clientId).emit('task', { task: "1", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber });
+        }
+        else io.to(socket.id).emit('AddProductScreen', 'product Number is not currect');
       }
-      else io.to(socket.id).emit('AddProductScreen', 'product Number is not currect');
+      else {
+        io.to(socket.id).emit('hubConnected', { 'hubStatus': hub.onlineConnected });
+      }
       /*   console.log('AddProductScreen', socket.id);
       //   const ID=socket.id;
       //   console.log(data)
@@ -80,9 +85,16 @@ module.exports = (app, io) => {
         userId: decoded.id
       });
       let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
-      const plantProduct = await PlantProduct.findById(id.toString());
-      console.log(objHub)
-      io.to(objHub.clientId).emit('task', { task: "6", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, motorState: stateMotor });
+      if (objHub) {
+        hub.onlineConnected = true;
+        await hub.save();
+        const plantProduct = await PlantProduct.findById(id.toString());
+        console.log(objHub)
+        io.to(objHub.clientId).emit('task', { task: "6", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, motorState: stateMotor });
+      }
+      else {
+        io.to(socket.id).emit('hubConnected', { 'hubStatus': hub.onlineConnected });
+      }
     })
     )
 
@@ -92,9 +104,16 @@ module.exports = (app, io) => {
         userId: decoded.id
       });
       let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
-      const plantProduct = await PlantProduct.findById(id.toString());
-      console.log(objHub)
-      io.to(objHub.clientId).emit('task', { task: "4", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, autoIrrigateState: autoIrrigate });
+      if (objHub) {
+        hub.onlineConnected = true;
+        await hub.save();
+        const plantProduct = await PlantProduct.findById(id.toString());
+        console.log(objHub)
+        io.to(objHub.clientId).emit('task', { task: "4", macAddress: plantProduct.macAddress, motorCurrentSub: plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber, autoIrrigateState: autoIrrigate });
+      }
+      else {
+        io.to(socket.id).emit('hubConnected', { 'hubStatus': hub.onlineConnected });
+      }
     })
     )
 
@@ -104,10 +123,15 @@ module.exports = (app, io) => {
         userId: decoded.id
       });
       let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
-      const plantProduct = await PlantProduct.findById(id.toString());
-      console.log(objHub)
-      io.to(objHub.clientId).emit('task', { task: "3", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, });
-      console.log('socket is sent')
+      if ((objHub) && (hub.onlineConnected === true)) {
+        const plantProduct = await PlantProduct.findById(id.toString());
+        console.log(objHub)
+        io.to(objHub.clientId).emit('task', { task: "3", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, });
+        console.log('socket is sent')
+      }
+      else {
+        io.to(socket.id).emit('hubConnected', { 'hubStatus': hub.onlineConnected });
+      }
     })
     )
 
