@@ -36,6 +36,7 @@ exports.updateOnehub = asyncHandler(async (req, res, next) => {
     hubCatNumber: hubCatNumber,
   });
   let UpdateUrl;
+
   if (type === 'slave') {
     hub.progremVersionHubSlave.versionNumber = versionNumber;
     UpdateUrl = hub.progremVersionHubSlave.updateUrl;
@@ -52,9 +53,10 @@ exports.updateOnehub = asyncHandler(async (req, res, next) => {
   let obj = clients.find(
     ({ customId }) => customId === hub.hubCatNumber
   );
-  if (obj != undefined) {
+  console.log(obj)
+  if (obj) {
     hub.onlineConnected = true;
-    io.sockets.connected[obj.clientId].emit('Update_Progrem_hub', { task: "11", hubhubCatNumber: hubCatNumber, ssid: "", pass: "", VERSION_NUMBER: versionNumber, UPDATE_URL: UpdateUrl, type: type });
+    io.to(obj.clientId).emit('Update_Progrem_hub', { task: "11", hubhubCatNumber: hubCatNumber, ssid: "", pass: "", VERSION_NUMBER: versionNumber, UPDATE_URL: UpdateUrl, type: type });
   } else {
     hub.onlineConnected = false;
   }

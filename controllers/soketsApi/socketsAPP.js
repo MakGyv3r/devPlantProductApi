@@ -125,7 +125,7 @@ module.exports = (app, io) => {
       let objHub = clients.find(({ customId }) => customId === hub.hubCatNumber);
       if ((objHub) && (hub.onlineConnected === true)) {
         const plantProduct = await PlantProduct.findById(id.toString());
-        console.log(objHub)
+        // console.log(objHub)
         io.to(objHub.clientId).emit('task', { task: "3", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, });
         console.log('socket is sent')
       }
