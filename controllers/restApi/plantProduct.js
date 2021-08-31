@@ -224,7 +224,7 @@ exports.updateOnePlantProduct = asyncHandler(async (req, res, next) => {
   );
   if (obj != undefined) {
     hub.onlineConnected = true;
-    io.sockets.connected[obj.clientId].emit('Update_Progrem_plant', { task: "8", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, ssid: "", pass: "", VERSION_NUMBER: plantProduct.progremVersion.versionNumber, UPDATE_URL: plantProduct.progremVersion.updateUrl });
+    io.to(obj.clientId).emit('Update_Progrem_plant', { task: "8", macAddress: plantProduct.macAddress, productCatNumber: plantProduct.productCatNumber, ssid: "", pass: "", VERSION_NUMBER: plantProduct.progremVersion.versionNumber, UPDATE_URL: plantProduct.progremVersion.updateUrl });
   } else {
     hub.onlineConnected = false;
   }

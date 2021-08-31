@@ -1,2 +1,2 @@
-http://aqueous-river-62632.herokuapp.com/hubmaster.bin
+http://a16f-87-68-203-193.ngrok.io/hubmaster.bin
 2
