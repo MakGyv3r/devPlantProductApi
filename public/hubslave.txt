@@ -1,2 +1,2 @@
-http://a16f-87-68-203-193.ngrok.io/hubslave.bin
+http://aqueous-river-62632.herokuapp.com/hubslave.bin
 2
