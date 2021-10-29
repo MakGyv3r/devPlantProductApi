@@ -6,7 +6,7 @@ const HubSchema = new mongoose.Schema({
   hubCatNumber: {
     type: String,
     require: [true, 'Please add Product catalog number'],
-    unique: true,
+    //unique: true,
     trim: true,
     length: [9, 'Product catalog number should be 9 numbers'],
   },
@@ -18,10 +18,10 @@ const HubSchema = new mongoose.Schema({
 
   plantProductId: [
     {
+      unique: false,
       type: mongoose.Schema.Types.ObjectId,
       ref: 'PlantProduct',
-      meta: {},
-      unique: true,
+      //meta: {},
     },
   ],
 
@@ -76,7 +76,8 @@ const HubSchema = new mongoose.Schema({
       default: 'http://morning-falls-78321.herokuapp.com/hubslave.txt',
     },
   },
-});
+
+}, { autoIndex: false });
 
 
 module.exports = mongoose.model('Hub', HubSchema);

@@ -9,7 +9,8 @@ const {
   getOnePlantProduct,
   getPlantProductData,
   getUserPlantProductsUpdates,
-  addDataPlantProduct
+  addDataPlantProduct,
+  removePlantProductHub
 } = require('../controllers/restApi/plantProduct');
 
 const router = express.Router();
@@ -27,6 +28,7 @@ router.get('/getUserPlantProducts', protect/*,advancedResults(PlantProduct)*/, g
 router.put('/getOnePlantProduct', protect, getOnePlantProduct);
 router.put('/plantInitialization', protect, plantInitialization);
 router.put('/removePlantProduct', protect, removePlantProduct);
+router.put('/removePlantProductHub', protect, removePlantProductHub);
 router.put('/addDataPlantProduct', protect, addDataPlantProduct);
 
 module.exports = router;

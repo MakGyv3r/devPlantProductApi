@@ -18,48 +18,24 @@ exports.creatplantProduct = asyncHandler(async (req, res, next) => {
 // @route   put/api/v1/PlantProduct/addPlantProductToHub
 // @access  privet/protected
 exports.addPlantProductToHub = asyncHandler(async (req, res, next) => {
-  console.log("i am here");
-  const user = await User.findById(req.user.id);
-  const { productCatNumber } = req.body;
-  console.log(req.body)
-  const hub = await Hub.findById(user.hubId);
+  const { hubId, productCatNumber } = req.body;
+  const hub = await Hub.findById(hubId);
   const plantProduct = await PlantProduct.findOne({
     productCatNumber: productCatNumber,
   });
   // chacking if planti plant is not asind
-  if (
-    !plantProduct ||
-    plantProduct.userId !== undefined
-  ) {
+  if (!plantProduct || !hub) {
     return res
       .status(402)
       .send({ error: "Must provide valid Planti's catloge number " });
   }
-  //plantInitialization
-  // const io = req.app.get('socketio');
-  // let obj = clients.find(
-  //   ({ customId }) => customId === hub.hubCatNumber
-  // );
-  // if (obj != undefined) {
-  //   hub.onlineConnected = true;
-  //   io.sockets.connected[obj.clientId].emit( 'task',{ task: "1",macAddress: plantProduct.macAddress,motorCurrentSub:plantProduct.waterSensor.motorCurrentSub, productCatNumber: plantProduct.productCatNumber} );
-  // } else {
-  //   hub.onlineConnected = false;
-  // }
-
-  // await hub.plantProductId.push(plantProduct._id);
-  // await hub.save();
-  // saving the  user and hub in plantiplant
-  // plantProduct.hubId = hub._id;
-  // await plantProduct.save();
-
-  // await sleep(2000).then(() => {
-  //   console.log('1');
-  //   res.status(200).json({
-  //     success: true,
-  //     data: plantiplant,
-  //   });
-  // });
+  else {
+    await hub.plantProductId.push(plantProduct._id);
+    await hub.save();
+    // saving the  user and hub in plantiplant
+    plantProduct.hubId = hub._id;
+    await plantProduct.save();
+  }
   res.status(200).json({
     success: true,
   });
@@ -199,6 +175,26 @@ exports.removePlantProduct = asyncHandler(async (req, res, next) => {
   await plantProduct.remove();
   await hub.save();
 
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
+});
+
+// @desc    remove plantProduct from hub
+// @route   delete /api/v1/plantProduct/removePlantProductHub
+// @access  privet/protected
+exports.removePlantProductHub = asyncHandler(async (req, res, next) => {
+  const { plantproductId } = req.body;
+  const plantProduct = await PlantProduct.findById(plantproductId);
+  const hub = await Hub.findById(plantProduct.hubId);
+  hub.plantProductId.pull(plantProduct._id);
+  console.log(plantProduct.hubId);
+  plantProduct.moistureSensor.tests = [];
+  plantProduct.lightSensor.tests = [];
+  plantProduct.hubId = undefined;
+  await plantProduct.save();
+  await hub.save();
   res.status(200).json({
     success: true,
     data: {},
