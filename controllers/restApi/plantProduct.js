@@ -1,9 +1,38 @@
 const ErrorResponse = require('../../utils/errorResponse');
 const asyncHandler = require('../../middleware/async');
 const PlantProduct = require('../../models/PlantProduct');
+const fs = require("fs");
+const path = require("path");
 const User = require('../../models/User');
 const Hub = require('../../models/Hub');
 let clients = require('../../models/clients');
+
+// @desc    creat new image 
+// @route   POST /api/v1/plantProduct/upload
+// @access privete/admin *** need to add and auth admin***
+exports.uploadPicture = asyncHandler(async (req, res, next) => {
+  const { productCatNumber } = req.body;
+  const plantProduct = await PlantProduct.findOne({
+    productCatNumber: productCatNumber,
+  });
+  //console.log(plantProduct)
+
+  console.log(req.file.buffer);
+  let obj = {
+    name: req.body.name,
+    desc: req.body.desc,
+    img: {
+      data: null/*fs.readFileSync(req.files.userPhoto.path)*/,/*fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),*/
+      contentType: 'image/jpeg'
+    }
+  }
+  plantProduct.imageSchema = obj;
+  await plantProduct.save();
+  res.status(200).json({
+    success: true,
+    data: plantProduct,
+  });
+});
 
 
 // @desc    creat new plantProduct
@@ -47,8 +76,8 @@ exports.addPlantProductToHub = asyncHandler(async (req, res, next) => {
 exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
-  // console.log(user.hubId);
-  // console.log(plantProducts);
+  console.log(user.hubId);
+  console.log(plantProducts);
   res.status(200).json({
     success: true,
     data: plantProducts,
@@ -107,7 +136,6 @@ exports.getPlantProductData = asyncHandler(async (req, res, next) => {
   //console.log(req.body);
   const { productCatNumber } = req.body;
   const plantProduct = await PlantProduct.findById(req.body.id);
-
   res.status(200).json({
     success: true,
     data: plantProduct,

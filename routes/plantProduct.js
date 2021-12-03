@@ -1,5 +1,6 @@
 const express = require('express');
 const {
+  uploadPicture,
   creatplantProduct,
   updateOnePlantProduct,
   addPlantProductToHub,
@@ -15,12 +16,13 @@ const {
 
 const router = express.Router();
 const PlantProduct = require('../models/PlantProduct');
-
 const advancedResults = require('../middleware/advancedResults');
 const { protect } = require('../middleware/auth');
+const upload = require("../middleware/upload");
 
 router.post('/creatplantProduct', creatplantProduct);
 router.post('/updateOnePlantProduct', updateOnePlantProduct);
+router.put('/uploadPicture', upload.single("file"), uploadPicture);
 router.put('/addPlantProductToHub', protect, addPlantProductToHub);
 router.put('/getPlantProductData', protect, getPlantProductData);
 router.put('/getUserPlantProductsUpdates', protect, getUserPlantProductsUpdates);
@@ -30,5 +32,6 @@ router.put('/plantInitialization', protect, plantInitialization);
 router.put('/removePlantProduct', protect, removePlantProduct);
 router.put('/removePlantProductHub', protect, removePlantProductHub);
 router.put('/addDataPlantProduct', protect, addDataPlantProduct);
+
 
 module.exports = router;

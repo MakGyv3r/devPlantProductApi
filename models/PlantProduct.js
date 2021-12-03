@@ -27,6 +27,15 @@ const PlantProductSchema = new mongoose.Schema({
     trim: true,
   },
 
+  // imageSchema: {
+  //   name: { type: String },
+  //   desc: { type: String },
+  //   img:
+  //   {
+  //     data: Buffer,
+  //     contentType: String
+  //   }
+  // },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -138,7 +147,7 @@ PlantProductSchema.statics.checkAmountOfData = async function (hubId, id) {
           print(e);
         }
 
-      if (obj.moistureSensor.tests.length > 10)
+      if (obj.moistureSensor.tests.length > 20)
         try {
           let latest10 = obj.moistureSensor.tests.slice(obj.moistureSensor.tests.length - 10)
           let moistureSensorupdatedData = obj
