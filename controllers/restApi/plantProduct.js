@@ -90,6 +90,7 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
 exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
+  const hub = await Hub.findById(user.hubId);
   //plantInitialization
   res.status(200).json({
     success: true,
