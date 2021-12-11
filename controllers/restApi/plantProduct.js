@@ -77,7 +77,7 @@ exports.getUserPlantProducts = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
   console.log(user.hubId);
-  console.log(plantProducts);
+  //console.log(plantProducts);
   res.status(200).json({
     success: true,
     data: plantProducts,
@@ -116,7 +116,7 @@ exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
 // @route   Put /api/v1/getOnePlantProduct
 // @access  privete/protected
 exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
-  console.log(req.body);
+  //console.log(req.body);
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
   const ID = req.body.id;
