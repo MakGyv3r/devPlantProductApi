@@ -110,6 +110,9 @@ exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
   } else {
     hub.onlineConnected = false;
   }
+  res.status(200).json({
+    success: true,
+  });
 });
 
 // @desc    get one PlantProducts
