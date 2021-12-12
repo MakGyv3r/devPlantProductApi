@@ -92,10 +92,6 @@ exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
   const hub = await Hub.findById(user.hubId);
   //plantInitialization
-  res.status(200).json({
-    success: true,
-    data: plantProducts,
-  });
   const io = req.app.get('socketio');
   let obj = clients.find(
     ({ customId }) => customId === hub.hubCatNumber
@@ -137,7 +133,7 @@ exports.getOnePlantProduct = asyncHandler(async (req, res, next) => {
 // @route   Put /api/v1/getPlantProductData
 // @access  privete/protected
 exports.getPlantProductData = asyncHandler(async (req, res, next) => {
-  //console.log(req.body);
+  console.log(req.body);
   const { productCatNumber } = req.body;
   const plantProduct = await PlantProduct.findById(req.body.id);
   res.status(200).json({
