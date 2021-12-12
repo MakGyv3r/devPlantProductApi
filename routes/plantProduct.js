@@ -25,7 +25,7 @@ router.post('/updateOnePlantProduct', updateOnePlantProduct);
 router.put('/uploadPicture', upload.single("file"), uploadPicture);
 router.put('/addPlantProductToHub', protect, addPlantProductToHub);
 router.put('/getPlantProductData', protect, getPlantProductData);
-router.put('/getUserPlantProductsUpdates', protect, getUserPlantProductsUpdates);
+router.get('/getUserPlantProductsUpdates', protect, getUserPlantProductsUpdates);
 router.get('/getUserPlantProducts', protect/*,advancedResults(PlantProduct)*/, getUserPlantProducts);
 router.put('/getOnePlantProduct', protect, getOnePlantProduct);
 router.put('/plantInitialization', protect, plantInitialization);
