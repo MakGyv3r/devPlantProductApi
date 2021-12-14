@@ -66,6 +66,7 @@ app.set('socketio', io);
 require("./controllers/soketsApi/socketsESP")(app, io);
 require("./controllers/soketsApi/socketsAPP")(app, io);
 
+
 // handle unhandled promise rejections
 process.on('unhandledRejection', (err, Promise) => {
   console.log(`Errore:${err.massage}`.red);

@@ -7,6 +7,10 @@ const User = require('../../models/User');
 const Hub = require('../../models/Hub');
 let clients = require('../../models/clients');
 
+const sleep = async (milliseconds) => {
+  await new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
 // @desc    creat new image 
 // @route   POST /api/v1/plantProduct/upload
 // @access privete/admin *** need to add and auth admin***
@@ -91,7 +95,6 @@ exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const plantProducts = await PlantProduct.find({ hubId: user.hubId });
   const hub = await Hub.findById(user.hubId);
-  //plantInitialization
   const io = req.app.get('socketio');
   let obj = clients.find(
     ({ customId }) => customId === hub.hubCatNumber
@@ -100,7 +103,7 @@ exports.getUserPlantProductsUpdates = asyncHandler(async (req, res, next) => {
     hub.onlineConnected = true;
     plantProducts.forEach(async element => {
       await sleep(40).then(() => {
-        io.sockets.connected[obj.clientId].emit('task', { task: "3", macAddress: element.macAddress, productCatNumber: element.productCatNumber });
+        io.to(obj.clientId).emit('task', { task: "3", macAddress: element.macAddress, productCatNumber: element.productCatNumber });
       });
     });
   } else {
